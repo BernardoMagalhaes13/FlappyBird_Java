@@ -2,12 +2,13 @@ package com.flappybirdg07;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.input.KeyStroke;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,9 +26,7 @@ public class Game implements Runnable {
 
     public Game(TerminalScreen screen) {
         this.screen = screen;
-        Position initialBirdPosition = new Position(10, 10);
-        b = new Bird(initialBirdPosition);
-        adder(new Pipes(new Position(40, getRandomPipeHeight())));
+        adder(new Pipes(40, getRandomPipeHeight()));
         score = new Score();
     }
 
@@ -59,16 +58,19 @@ public class Game implements Runnable {
         // Atualiza a tela
         screen.refresh();
     }
+
     private void runGameLoop() {
         try {
             while (jogoEmExecucao) {
                 for (Pipes tempPipe : pipe) {
                     tempPipe.move();
                 }
+
                 checkCollisions();
 
                 if (random.nextInt(100) < 5) {
-                    adder(new Pipes(new Position(40, getRandomPipeHeight())));
+                    adder(new Pipes(40, getRandomPipeHeight()));
+
                 }
 
                 b.move();
@@ -100,16 +102,28 @@ public class Game implements Runnable {
         System.out.println("Fim do jogo! Pontuação final: " + score.getScore());
     }
 
-    private void checkCollisions() {
+    public void checkCollisions() {
         for (Pipes tempPipe : pipe) {
-            if (b.collidesWith(tempPipe)) {
+            if (b.collidesWithPipe(tempPipe)) {
                 handleEndGame();
                 return;
             }
         }
+
         if (b.getPosition().getY() <= 0 || b.getPosition().getY() >= screen.getTerminalSize().getRows()) {
             handleEndGame();
         }
+    }
+
+    public boolean collidesWithPipe(Pipes pipe) {
+        // Get the bird's bounding box
+        Rectangle birdBoundingBox = b.getBoundingBox();
+
+        // Get the pipe's bounding box
+        Rectangle pipeBoundingBox = pipe.getBoundingBox();
+
+        // Check if the bounding boxes intersect
+        return birdBoundingBox.intersects(pipeBoundingBox);
     }
 
     private void endGame() {
@@ -126,15 +140,14 @@ public class Game implements Runnable {
         }
         restartGame();
     }
+
     private void restartGame() {
         b.setPosition(new Position(10, 10));
         pipe.clear();
-        adder(new Pipes(new Position(40, getRandomPipeHeight())));
+        adder(new Pipes(40, getRandomPipeHeight()));
         score.resetScore();
         jogoEmExecucao = true;
     }
-
-
 
     @Override
     public void run() {
@@ -147,7 +160,7 @@ public class Game implements Runnable {
                 checkCollisions();
 
                 if (random.nextInt(100) < 5) {
-                    adder(new Pipes(new Position(40, getRandomPipeHeight())));
+                    adder(new Pipes(40, getRandomPipeHeight()));
                 }
 
                 b.move();
@@ -189,11 +202,10 @@ public class Game implements Runnable {
     }
 
     public void startGame() {
-        Position initialBirdPosition = new Position(10, 10);
+        Position initialPosition = new Position(10, 10);
+        b = new Bird();
 
-        Bird bird = new Bird(initialBirdPosition);
-
-        setBird(bird);
+        setBird(b);
 
         Thread gameThread = new Thread(this);
         gameThread.start();
@@ -207,13 +219,5 @@ public class Game implements Runnable {
 
     public void setBird(Bird bird) {
         this.b = bird;
-    }
-
-    public boolean isJogoEmExecucao() {
-        return false;
-    }
-
-    public boolean getBird() {
-        return false;
     }
 }

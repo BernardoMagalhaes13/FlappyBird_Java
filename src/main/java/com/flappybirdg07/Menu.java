@@ -17,7 +17,6 @@ public class Menu {
         this.screen = screen;
         this.game = game;
     }
-
     public void showMainMenu() {
         try {
             screen.startScreen();

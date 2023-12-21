@@ -1,5 +1,7 @@
-import java.awt.Image;
+package com.flappybirdg07;
+
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
