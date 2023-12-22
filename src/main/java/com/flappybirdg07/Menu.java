@@ -1,94 +1,67 @@
 package com.flappybirdg07;
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 
-import java.io.IOException;
+public class Menu implements Runnable {
 
-public class Menu {
-    private TerminalScreen screen;
     private Game game;
+    private TerminalScreen screen;
 
-    public Menu(TerminalScreen screen, Game game) {
+    public Menu(TerminalScreen screen) {
         this.screen = screen;
-        this.game = game;
+        game = new Game(screen.getTerminalSize().getColumns(), screen.getTerminalSize().getRows());
+        new Thread(this).start();
     }
-    public void showMainMenu() {
-        try {
-            screen.startScreen();
 
-            drawStartButton();
-            drawMessage();
-            drawImage();
+    public void update() {
+        game.update();
+        screen.clear();
+        render(screen.newTextGraphics());
+        screen.refresh();
+    }
 
-            KeyStroke keyStroke;
-            do {
-                keyStroke = screen.readInput();
-            } while (keyStroke.getKeyType() != KeyType.Character || keyStroke.getCharacter() != ' ');
+    public void render(TextGraphics textGraphics) {
+        for (Render r : game.getRenders()) {
+            int x = r.x;
+            int y = r.y;
 
-            game.startGame();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                screen.stopScreen();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (r.transform != null) {
+                // You may need to implement a custom method to draw transformed images
+                drawTransformed(textGraphics, r);
+            } else {
+                // Assuming r.image is a 2D char array
+                for (char[] row : r.image) {
+                    for (char pixel : row) {
+                        textGraphics.setCharacter(new TerminalPosition(x++, y), new TextCharacter(pixel));
+                    }
+                    x = r.x; // Reset x for the next row
+                    y++;
+                }
             }
+        }
+
+        textGraphics.setForegroundColor(TextColor.ANSI.BLACK);
+
+        if (!game.started) {
+            textGraphics.putString(10, 15, "Press SPACE to start");
+        } else {
+            textGraphics.putString(2, 20, "Score: " + game.score);
+        }
+
+        if (game.gameover) {
+            textGraphics.putString(10, 15, "Press R to restart");
         }
     }
 
-    private void drawStartButton() throws IOException {
-        TextGraphics textGraphics = screen.newTextGraphics();
-        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-        textGraphics.setBackgroundColor(TextColor.ANSI.BLUE);
-
-
-        int centerX = (screen.getTerminalSize().getColumns() - 10) / 2;
-        textGraphics.putString(centerX, 1, " [Start] ");
-
-        screen.refresh();
-    }
-
-    private void drawImage() throws IOException {
-        TextGraphics textGraphics = screen.newTextGraphics();
-        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-        textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
-
-        int centerX = (screen.getTerminalSize().getColumns() - 5) / 2;
-        textGraphics.putString(centerX, 3, "  /\\  ");
-        textGraphics.putString(centerX, 4, " /  \\ ");
-        textGraphics.putString(centerX, 5, "/____\\");
-
-        screen.refresh();
-    }
-
-    private void drawMessage() throws IOException {
-        TextGraphics textGraphics = screen.newTextGraphics();
-        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-        textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
-
-        int centerX = (screen.getTerminalSize().getColumns() - 29) / 2;
-        textGraphics.putString(centerX, 7, "Pressione o SPACE para jogar !");
-
-        screen.refresh();
-    }
-
-    public static void main(String[] args) {
+    public void run() {
         try {
-            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            Terminal terminal = terminalFactory.createTerminal();
-            TerminalScreen screen = new TerminalScreen(terminal);
-
-            Game game = new Game(screen);
-            Menu menu = new Menu(screen, game);
-            menu.showMainMenu();
-        } catch (IOException e) {
+            while (true) {
+                update();
+                Thread.sleep(25);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

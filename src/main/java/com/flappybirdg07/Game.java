@@ -1,223 +1,160 @@
 package com.flappybirdg07;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
+public class Game {
 
-import java.awt.*;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Random;
+    public static final int PIPE_DELAY = 100;
 
-public class Game implements Runnable {
+    private Boolean paused;
 
-    private Bird b;
-    private LinkedList<Pipes> pipe = new LinkedList<>();
-    private Random random = new Random();
-    private Score score;
+    private int pauseDelay;
+    private int restartDelay;
+    private int pipeDelay;
 
-    private TerminalScreen screen;
-    private boolean jogoEmExecucao = true;
+    private Bird bird;
+    private ArrayList<Pipe> pipes;
+    private Keyboard keyboard;
 
-    public Game(TerminalScreen screen) {
-        this.screen = screen;
-        adder(new Pipes(40, getRandomPipeHeight()));
-        score = new Score();
+    public int score;
+    public Boolean gameover;
+    public Boolean started;
+
+    public Game(int screenWidth, int screenHeight) {
+        keyboard = Keyboard.getInstance();
+        restart(screenWidth, screenHeight);
     }
 
-    public void adder(Pipes p) {
-        pipe.add(p);
+    public void restart(int screenWidth, int screenHeight) {
+        paused = false;
+        started = false;
+        gameover = false;
+
+        score = 0;
+        pauseDelay = 0;
+        restartDelay = 0;
+        pipeDelay = 0;
+
+        bird = new Bird(screenWidth / 4, screenHeight / 2);
+        pipes = new ArrayList<Pipe>();
     }
 
-    private void draw() throws IOException {
-        TextGraphics textGraphics = screen.newTextGraphics();
+    public void update() {
+        watchForStart();
 
-        // Desenha o pássaro
-        drawBird(textGraphics);
+        if (!started)
+            return;
 
-        // Desenha os canos
-        Iterator<Pipes> iterator = pipe.iterator();
-        while (iterator.hasNext()) {
-            Pipes tempPipe = iterator.next();
-            drawPipe(textGraphics, tempPipe);
+        watchForPause();
+        watchForReset();
 
-            // Adicione a lógica para remover canos fora da tela
-            if (tempPipe.getPosition().getX() < 0) {
-                iterator.remove();
-            }
+        if (paused)
+            return;
+
+        bird.update();
+
+        if (gameover)
+            return;
+
+        movePipes();
+        checkForCollisions();
+    }
+
+    public ArrayList<Render> getRenders() {
+        ArrayList<Render> renders = new ArrayList<Render>();
+        renders.add(new Render(0, 0, "lib/background.txt")); // Assuming you have a text representation for the background
+        for (Pipe pipe : pipes)
+            renders.add(pipe.getRender());
+        renders.add(new Render(0, 0, "lib/foreground.txt")); // Assuming you have a text representation for the foreground
+        renders.add(bird.getRender());
+        return renders;
+    }
+
+    private void watchForStart() {
+        if (!started && keyboard.isKeyPressed(KeyType.Character(' '))) {
+            started = true;
         }
-
-        // Exibe a pontuação
-        textGraphics.putString(2, 1, "Score: " + score.getScore());
-
-        // Atualiza a tela
-        screen.refresh();
     }
 
-    private void runGameLoop() {
-        try {
-            while (jogoEmExecucao) {
-                for (Pipes tempPipe : pipe) {
-                    tempPipe.move();
+    private void watchForPause() {
+        if (pauseDelay > 0)
+            pauseDelay--;
+
+        if (keyboard.isKeyPressed(KeyType.Character('P')) && pauseDelay <= 0) {
+            paused = !paused;
+            pauseDelay = 10;
+        }
+    }
+
+    private void watchForReset() {
+        if (restartDelay > 0)
+            restartDelay--;
+
+        if (keyboard.isKeyPressed(KeyType.Character('R')) && restartDelay <= 0) {
+            restart();
+            restartDelay = 10;
+        }
+    }
+
+    private void movePipes() {
+        pipeDelay--;
+
+        if (pipeDelay < 0) {
+            pipeDelay = PIPE_DELAY;
+            Pipe northPipe = null;
+            Pipe southPipe = null;
+
+            // Look for pipes off the screen
+            for (Pipe pipe : pipes) {
+                if (pipe.x - pipe.width < 0) {
+                    if (northPipe == null) {
+                        northPipe = pipe;
+                    } else if (southPipe == null) {
+                        southPipe = pipe;
+                        break;
+                    }
                 }
-
-                checkCollisions();
-
-                if (random.nextInt(100) < 5) {
-                    adder(new Pipes(40, getRandomPipeHeight()));
-
-                }
-
-                b.move();
-                draw();
-                Thread.sleep(10);
             }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                screen.stopScreen();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (northPipe == null) {
+                Pipe pipe = new Pipe("north");
+                pipes.add(pipe);
+                northPipe = pipe;
+            } else {
+                northPipe.reset();
             }
+
+            if (southPipe == null) {
+                Pipe pipe = new Pipe("south");
+                pipes.add(pipe);
+                southPipe = pipe;
+            } else {
+                southPipe.reset();
+            }
+
+            northPipe.y = southPipe.y + southPipe.height + 175;
+        }
+
+        for (Pipe pipe : pipes) {
+            pipe.update();
         }
     }
 
-    private void drawBird(TextGraphics textGraphics) {
-        textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-        textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
-        b.draw(textGraphics);
-    }
+    private void checkForCollisions() {
 
-    private void drawPipe(TextGraphics textGraphics, Pipes pipe) {
-        pipe.draw(textGraphics);
-    }
-
-    private void handleEndGame() {
-        System.out.println("Fim do jogo! Pontuação final: " + score.getScore());
-    }
-
-    public void checkCollisions() {
-        for (Pipes tempPipe : pipe) {
-            if (b.collidesWithPipe(tempPipe)) {
-                handleEndGame();
-                return;
+        for (Pipe pipe : pipes) {
+            if (pipe.collides(bird.x, bird.y, bird.width, bird.height)) {
+                gameover = true;
+                bird.dead = true;
+            } else if (pipe.x == bird.x && pipe.orientation.equalsIgnoreCase("south")) {
+                score++;
             }
         }
 
-        if (b.getPosition().getY() <= 0 || b.getPosition().getY() >= screen.getTerminalSize().getRows()) {
-            handleEndGame();
+        // Ground + Bird collision
+        if (bird.y + bird.height > App.HEIGHT - 80) {
+            gameover = true;
+            bird.y = App.HEIGHT - 80 - bird.height;
         }
-    }
-
-    public boolean collidesWithPipe(Pipes pipe) {
-        // Get the bird's bounding box
-        Rectangle birdBoundingBox = b.getBoundingBox();
-
-        // Get the pipe's bounding box
-        Rectangle pipeBoundingBox = pipe.getBoundingBox();
-
-        // Check if the bounding boxes intersect
-        return birdBoundingBox.intersects(pipeBoundingBox);
-    }
-
-    private void endGame() {
-        System.out.println("Fim do jogo! Pontuação final: " + score.getScore());
-        System.out.println("Pressione a barra de espaço para reiniciar o jogo.");
-
-        try {
-            KeyStroke keyStroke;
-            do {
-                keyStroke = screen.readInput();
-            } while (keyStroke == null || keyStroke.getKeyType() != KeyType.Character || keyStroke.getCharacter() != ' ');
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        restartGame();
-    }
-
-    private void restartGame() {
-        b.setPosition(new Position(10, 10));
-        pipe.clear();
-        adder(new Pipes(40, getRandomPipeHeight()));
-        score.resetScore();
-        jogoEmExecucao = true;
-    }
-
-    @Override
-    public void run() {
-        try {
-            while (jogoEmExecucao) {
-                for (Pipes tempPipe : pipe) {
-                    tempPipe.move();
-                }
-
-                checkCollisions();
-
-                if (random.nextInt(100) < 5) {
-                    adder(new Pipes(40, getRandomPipeHeight()));
-                }
-
-                b.move();
-                draw();
-                Thread.sleep(10);
-            }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                screen.stopScreen();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public int getRandomPipeHeight() {
-        return random.nextInt(10) + 5;
-    }
-
-    public static void main(String[] args) {
-        try {
-            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            Terminal terminal = terminalFactory.createTerminal();
-            TerminalScreen screen = new TerminalScreen(terminal);
-            screen.startScreen();
-
-            Game game = new Game(screen);
-            game.startMenu();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void startMenu() {
-        Menu menu = new Menu(screen, this);
-        menu.showMainMenu();
-    }
-
-    public void startGame() {
-        Position initialPosition = new Position(10, 10);
-        b = new Bird();
-
-        setBird(b);
-
-        Thread gameThread = new Thread(this);
-        gameThread.start();
-
-        try {
-            gameThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setBird(Bird bird) {
-        this.b = bird;
     }
 }
