@@ -8,17 +8,6 @@ Este é um projeto de implementação do jogo Flappy Bird em Java. O jogo foi de
 O Flappy Bird é um jogo simples, no qual o jogador controla um pássaro com o objetivo de passar entre os obstáculos formados por paredes verticais. Ao passar por cada conjunto de paredes, o jogador garante um ponto.
 O jogo é infinito e acaba quando perder (bater numa das paredes). Para dificultar o jogo, à medida que o jogador vai tendo mais pontos, vai aumentando a velocidade do jogo / o número de paredes no ecrã.
 
-## Funcionalidades Desejadas
-
-- Menu Inicial: Desenvolvimento de um menu inicial que permitirá aos jogadores iniciar o jogo, sair do jogo e ver o record de pontuação.
-- Controlo do Pássaro : Implementação do controlo do pássaro com cliques no rato para voar e evitar colisões com obstáculos.
-- Gerar Obstáculos: Desenvolvimento de um sistema para gerar obstáculos aleatórios ao longo do percurso do pássaro.
-- Sistema de Pontuação: Criação de um mecanismo de pontuação para acompanhar e exibir a pontuação do jogador à medida que avança no jogo e guardar o melhor resultado para exibir no ecrã inicial.
-- Gráficos Simples: Desenvolvimento de elementos gráficos básicos para representar o cenário e o pássaro.
-- Dificultar o jogo: À medida que a pontuação do jogador vai aumentado, vai aumentado a velocidade de pássaro ou do cenário, para que seja mais difícil ultrapassar os obstáculos.
-
-## Funcionalidades Instaladas
-
 ## Grupo
 
 Este projeto foi desenvolvido pelo grupo 07 da Turma B:
