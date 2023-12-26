@@ -1,7 +1,5 @@
-package java.com.flappybirdg07;
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.input.Key;
+package com.flappybirdg07;
+
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -23,27 +21,17 @@ public class Application {
 
             Keyboard keyboard = Keyboard.getInstance();
 
-            GamePanel panel = new GamePanel(WIDTH, HEIGHT, screen);
+            // Create separate objects for menu and game
+            Menu menu = new Menu(screen);
+            Game game = new Game(WIDTH, HEIGHT);
 
-            screen.getTerminal().addResizeListener((terminal, newSize) -> {
-                panel.onResize(newSize.getColumns(), newSize.getRows());
+            // Handle resizing for both menu and game
+            screen.addResizeListener((terminal, newSize) -> {
+                menu.onResize(newSize.getColumns(), newSize.getRows());
+                game.onResize(newSize.getColumns(), newSize.getRows());
             });
 
-            screen.getTerminal().addInputListener((input) -> {
-                if (input.getKeyType() == KeyType.Escape) {
-                    try {
-                        screen.stopScreen();
-                        System.exit(0);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            screen.addResizeListener((event) -> {
-                panel.onResize(event.getNewSize().getColumns(), event.getNewSize().getRows());
-            });
-
+            // Handle input for both menu and game
             screen.addInputListener((input) -> {
                 if (input.getKeyType() == KeyType.Escape) {
                     try {
@@ -53,17 +41,38 @@ public class Application {
                         e.printStackTrace();
                     }
                 } else {
-                    keyboard.handleInput(input);
+                    // Handle menu input
+                    if (menu.isRunning()) {
+                        menu.handleInput(input);
+                    } else {
+                        // Handle game input
+                        game.handleInput(input);
+                    }
                 }
             });
 
-            panel.init();
+            // Initialize and start both menu and game
+            menu.init();
+            game.init();
 
+            // Switch between menu and game states
+            boolean isMenuActive = true;
             while (true) {
-                panel.update();
-                panel.render();
+                if (isMenuActive) {
+                    // Render and update menu
+                    menu.render(screen.newTextGraphics());
+                    menu.update();
+                } else {
+                    // Render and update game
+                    game.render(screen.newTextGraphics());
+                    game.update();
+                }
+
                 screen.refresh();
                 Thread.sleep(100);
+
+                // Switch between menu and game
+                isMenuActive = !isMenuActive;
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

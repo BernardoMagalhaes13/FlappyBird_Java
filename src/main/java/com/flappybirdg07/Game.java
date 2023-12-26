@@ -1,5 +1,7 @@
 package com.flappybirdg07;
-import java.awt.event.KeyEvent;
+
+import com.googlecode.lanterna.input.KeyType;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -11,9 +13,8 @@ public class Game {
     private int pauseDelay;
     private int restartDelay;
     private int pipeDelay;
-
     private Bird bird;
-    private ArrayList<Pipe> pipes;
+    private ArrayList<Pipes> pipes;
     private Keyboard keyboard;
 
     public int score;
@@ -24,6 +25,22 @@ public class Game {
         keyboard = Keyboard.getInstance();
         restart(screenWidth, screenHeight);
     }
+
+    public void onResize(int newWidth, int newHeight) {
+        // Atualizar a lógica conforme necessário para o seu jogo
+
+        // Atualizar a largura e altura do jogo
+        Application.WIDTH = newWidth;
+        Application.HEIGHT = newHeight;
+
+        // Atualizar a posição e tamanho dos elementos do jogo, por exemplo:
+        bird.y = newHeight / 2;  // Centralizar a posição vertical do pássaro
+
+        for (Pipes pipes : pipes) {
+            pipes.reset();  // Redefinir a posição dos canos
+        }
+    }
+
 
     public void restart(int screenWidth, int screenHeight) {
         paused = false;
@@ -36,7 +53,7 @@ public class Game {
         pipeDelay = 0;
 
         bird = new Bird(screenWidth / 4, screenHeight / 2);
-        pipes = new ArrayList<Pipe>();
+        pipes = new ArrayList<Pipes>();
     }
 
     public void update() {
@@ -62,10 +79,10 @@ public class Game {
 
     public ArrayList<Render> getRenders() {
         ArrayList<Render> renders = new ArrayList<Render>();
-        renders.add(new Render(0, 0, "lib/background.txt")); // Assuming you have a text representation for the background
-        for (Pipe pipe : pipes)
+        renders.add(new Render(0, 0, "java/assets/background.png")); // Assuming you have a text representation for the background
+        for (Pipes pipe : pipes)
             renders.add(pipe.getRender());
-        renders.add(new Render(0, 0, "lib/foreground.txt")); // Assuming you have a text representation for the foreground
+        renders.add(new Render(0, 0, "java/assets/foreground.png")); // Assuming you have a text representation for the foreground
         renders.add(bird.getRender());
         return renders;
     }
@@ -101,11 +118,11 @@ public class Game {
 
         if (pipeDelay < 0) {
             pipeDelay = PIPE_DELAY;
-            Pipe northPipe = null;
-            Pipe southPipe = null;
+            Pipes northPipe = null;
+            Pipes southPipe = null;
 
             // Look for pipes off the screen
-            for (Pipe pipe : pipes) {
+            for (Pipes pipe : pipes) {
                 if (pipe.x - pipe.width < 0) {
                     if (northPipe == null) {
                         northPipe = pipe;
@@ -117,7 +134,7 @@ public class Game {
             }
 
             if (northPipe == null) {
-                Pipe pipe = new Pipe("north");
+                Pipes pipe = new Pipes("north");
                 pipes.add(pipe);
                 northPipe = pipe;
             } else {
@@ -125,7 +142,7 @@ public class Game {
             }
 
             if (southPipe == null) {
-                Pipe pipe = new Pipe("south");
+                Pipes pipe = new Pipes("south");
                 pipes.add(pipe);
                 southPipe = pipe;
             } else {
@@ -135,26 +152,26 @@ public class Game {
             northPipe.y = southPipe.y + southPipe.height + 175;
         }
 
-        for (Pipe pipe : pipes) {
+        for (Pipes pipe : pipes) {
             pipe.update();
         }
     }
 
     private void checkForCollisions() {
 
-        for (Pipe pipe : pipes) {
-            if (pipe.collides(bird.x, bird.y, bird.width, bird.height)) {
+        for (Pipes pipes : pipes) {
+            if (pipes.collides(bird.x, bird.y, bird.width, bird.height)) {
                 gameover = true;
                 bird.dead = true;
-            } else if (pipe.x == bird.x && pipe.orientation.equalsIgnoreCase("south")) {
+            } else if (pipes.x == bird.x && pipes.orientation.equalsIgnoreCase("south")) {
                 score++;
             }
         }
 
         // Ground + Bird collision
-        if (bird.y + bird.height > App.HEIGHT - 80) {
+        if (bird.y + bird.height > Application.HEIGHT - 80) {
             gameover = true;
-            bird.y = App.HEIGHT - 80 - bird.height;
+            bird.y = Application.HEIGHT - 80 - bird.height;
         }
     }
 }

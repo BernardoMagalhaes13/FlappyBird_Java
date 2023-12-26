@@ -1,7 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
 import com.flappybirdg07.Pipes;
-import com.flappybirdg07.Position;
 import org.junit.Before;
 import org.junit.Test;
 

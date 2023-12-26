@@ -1,5 +1,4 @@
 import com.flappybirdg07.Bird;
-import com.flappybirdg07.Position;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,19 +1,16 @@
 package com.flappybirdg07;
 
 import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.image.Image;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import java.io.IOException;
+import java.awt.geom.AffineTransform;
+import java.util.List;
 
 public class Render {
 
     public int x;
     public int y;
-    public char[][] image;
+    public List<char[]> image;  // Alterado de char[][] para List<char[]>
+    public AffineTransform transform;
 
     public Render() {
     }
@@ -25,9 +22,10 @@ public class Render {
     }
 
     public void render(TextGraphics textGraphics) {
-        for (int i = 0; i < image.length; i++) {
-            for (int j = 0; j < image[i].length; j++) {
-                textGraphics.setCharacter(x + j, y + i, new TextCharacter(image[i][j]));
+        for (int i = 0; i < image.size(); i++) {
+            char[] row = image.get(i);
+            for (int j = 0; j < row.length; j++) {
+                textGraphics.setCharacter(x + j, y + i, new TextCharacter(row[j]));
             }
         }
     }

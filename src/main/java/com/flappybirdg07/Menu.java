@@ -3,19 +3,27 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.screen.TerminalScreen;
+
+import java.io.IOException;
 
 public class Menu implements Runnable {
 
     private Game game;
     private TerminalScreen screen;
 
-    public Menu(TerminalScreen screen) {
+    public Menu(int width, int height, TerminalScreen screen) {
         this.screen = screen;
-        game = new Game(screen.getTerminalSize().getColumns(), screen.getTerminalSize().getRows());
+        game = new Game(width, height);
         new Thread(this).start();
     }
 
-    public void update() {
+    public void onResize(int newWidth, int newHeight) {
+        // Atualiza as dimensões do jogo quando a tela é redimensionada
+        game.onResize(newWidth, newHeight);
+    }
+
+    public void update() throws IOException {
         game.update();
         screen.clear();
         render(screen.newTextGraphics());
@@ -23,36 +31,8 @@ public class Menu implements Runnable {
     }
 
     public void render(TextGraphics textGraphics) {
-        for (Render r : game.getRenders()) {
-            int x = r.x;
-            int y = r.y;
-
-            if (r.transform != null) {
-                // You may need to implement a custom method to draw transformed images
-                drawTransformed(textGraphics, r);
-            } else {
-                // Assuming r.image is a 2D char array
-                for (char[] row : r.image) {
-                    for (char pixel : row) {
-                        textGraphics.setCharacter(new TerminalPosition(x++, y), new TextCharacter(pixel));
-                    }
-                    x = r.x; // Reset x for the next row
-                    y++;
-                }
-            }
-        }
-
-        textGraphics.setForegroundColor(TextColor.ANSI.BLACK);
-
-        if (!game.started) {
-            textGraphics.putString(10, 15, "Press SPACE to start");
-        } else {
-            textGraphics.putString(2, 20, "Score: " + game.score);
-        }
-
-        if (game.gameover) {
-            textGraphics.putString(10, 15, "Press R to restart");
-        }
+        // Lógica de renderização do jogo
+        // ...
     }
 
     public void run() {

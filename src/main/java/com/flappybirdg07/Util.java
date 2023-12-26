@@ -1,53 +1,54 @@
 package com.flappybirdg07;
 
-import java.io.BufferedReader;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 public class Util {
 
-	private static HashMap<String, char[][]> cache = new HashMap<>();
+	private static HashMap<String, List<char[]>> imageCache = new HashMap<>();
 
-	public static char[][] loadImageAsCharArray(String path) {
-		char[][] image = null;
+	public static List<char[]> loadImageAsCharArray(String path) {
+		List<char[]> charArray = imageCache.get(path);
 
-		if (cache.containsKey(path)) {
-			return cache.get(path);
+		if (charArray != null) {
+			return charArray;
 		}
 
-		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-			// Assuming each line of the file represents a row of characters
-			// Adjust this based on your actual image format
-			String line;
-			int numRows = 0;
-			int numCols = 0;
-
-			while ((line = reader.readLine()) != null) {
-				numCols = Math.max(numCols, line.length());
-				numRows++;
-			}
-
-			image = new char[numRows][numCols];
-
-			reader.close();
-			reader = new BufferedReader(new FileReader(path));
-
-			int row = 0;
-			while ((line = reader.readLine()) != null) {
-				char[] chars = line.toCharArray();
-				System.arraycopy(chars, 0, image[row], 0, chars.length);
-				row++;
-			}
-
-			if (!cache.containsKey(path)) {
-				cache.put(path, image);
-			}
+		try {
+			BufferedImage image = ImageIO.read(new File(path));
+			charArray = convertImageToCharArray(image);
+			imageCache.put(path, charArray);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return image;
+		return charArray;
+	}
+
+	private static List<char[]> convertImageToCharArray(BufferedImage image) {
+		List<char[]> result = new ArrayList<>();
+
+		for (int y = 0; y < image.getHeight(); y++) {
+			char[] row = new char[image.getWidth()];
+			for (int x = 0; x < image.getWidth(); x++) {
+				int rgb = image.getRGB(x, y);
+				row[x] = convertRGBToChar(rgb);
+			}
+			result.add(row);
+		}
+
+		return result;
+	}
+
+	private static char convertRGBToChar(int rgb) {
+		// Lógica para converter o valor RGB para um caractere
+		// Ajuste conforme necessário
+		return 'X';
 	}
 }

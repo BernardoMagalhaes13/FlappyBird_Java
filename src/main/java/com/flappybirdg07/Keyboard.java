@@ -1,7 +1,8 @@
-package java.com.flappybirdg07;
-import com.googlecode.lanterna.input.Key;
+package com.flappybirdg07;
+
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+
 import java.util.HashSet;
 import java.util.Set;
 
