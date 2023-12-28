@@ -45,13 +45,9 @@ public class Pipes {
         return false;
     }
 
-    public void render(TextGraphics textGraphics) {
-        char pipeChar = '#'; // Use o caractere desejado para representar o cano
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                textGraphics.setCharacter(x + j, y + i, pipeChar);
-            }
-        }
+    public Render getRender() {
+        // Implemente a lógica para obter a representação gráfica dos canos (background, foreground, etc.)
+        // Esta é uma representação fictícia, você precisará adaptar isso para o seu código
+        return new Render(x, y, "java/assets/pipe.png");
     }
 }

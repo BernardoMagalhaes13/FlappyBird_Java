@@ -31,11 +31,12 @@ public class Keyboard {
         }
     }
 
-    public synchronized boolean isKeyPressed(KeyType keyType) {
+    public boolean isKeyPressed(char keyType) {
         return keysPressed.contains(keyType);
     }
 
-    public synchronized void clearKeyPressed(KeyType keyType) {
+    public boolean clearKeyPressed(KeyType keyType) {
         keysPressed.remove(keyType);
+        return false;
     }
 }

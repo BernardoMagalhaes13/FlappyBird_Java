@@ -1,48 +1,58 @@
 package com.flappybirdg07;
 
+import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+import com.googlecode.lanterna.screen.TerminalScreen;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
     public static final int PIPE_DELAY = 100;
 
     private Boolean paused;
-
     private int pauseDelay;
     private int restartDelay;
     private int pipeDelay;
     private Bird bird;
     private ArrayList<Pipes> pipes;
     private Keyboard keyboard;
+    private TerminalScreen screen;
+
+    private int screenWidth;
+    private int screenHeight;
 
     public int score;
     public Boolean gameover;
     public Boolean started;
 
-    public Game(int screenWidth, int screenHeight) {
-        keyboard = Keyboard.getInstance();
-        restart(screenWidth, screenHeight);
-    }
+    public void render(TextGraphics textGraphics) {
+        for (Render render : getRenders()) {
+            int x = render.x;
+            int y = render.y;
+            List<char[]> image = render.image;
 
-    public void onResize(int newWidth, int newHeight) {
-        // Atualizar a lógica conforme necessário para o seu jogo
-
-        // Atualizar a largura e altura do jogo
-        Application.WIDTH = newWidth;
-        Application.HEIGHT = newHeight;
-
-        // Atualizar a posição e tamanho dos elementos do jogo, por exemplo:
-        bird.y = newHeight / 2;  // Centralizar a posição vertical do pássaro
-
-        for (Pipes pipes : pipes) {
-            pipes.reset();  // Redefinir a posição dos canos
+            for (char[] lineChars : image) {
+                String line = new String(lineChars);
+                textGraphics.putString(x, y, line);
+                y++;
+            }
         }
     }
 
+    public Game(int screenWidth, int screenHeight, TerminalScreen screen) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.screen = screen;
 
-    public void restart(int screenWidth, int screenHeight) {
+        keyboard = Keyboard.getInstance();
+        init(screenWidth, screenHeight);
+    }
+
+    public void init(int WIDTH, int HEIGHT) {
         paused = false;
         started = false;
         gameover = false;
@@ -53,43 +63,76 @@ public class Game {
         pipeDelay = 0;
 
         bird = new Bird(screenWidth / 4, screenHeight / 2);
-        pipes = new ArrayList<Pipes>();
+        pipes = new ArrayList<>();
+        List<char[]> charArray = Util.loadImageAsCharArray("java/assets/background.png");
+
     }
 
-    public void update() {
+    public void init(KeyStroke input) {
+        // Lógica de inicialização com KeyStroke
+    }
+
+    public void onResize(int newWidth, int newHeight) {
+        // Atualizar a lógica conforme necessário para o seu jogo
+
+        // Atualizar a largura e altura do jogo
+        // (Aqui você pode decidir se deseja ajustar as posições dos elementos ao redimensionar)
+        bird.y = newHeight / 2;  // Centralizar a posição vertical do pássaro
+        for (Pipes pipe : pipes) {
+            pipe.reset();  // Redefinir a posição dos canos
+        }
+    }
+
+    public void restart() {
+        init(screenWidth, screenHeight);
+    }
+
+    public void update() throws IOException {
+        onResize(screen.getTerminalSize().getColumns(), screen.getTerminalSize().getRows());
+
         watchForStart();
 
-        if (!started)
+        if (!started) {
             return;
+        }
 
         watchForPause();
         watchForReset();
 
-        if (paused)
+        if (paused) {
             return;
+        }
 
-        bird.update();
+        KeyStroke input = screen.pollInput();
 
-        if (gameover)
+        if (input != null) {
+            bird.update(input);
+            handleInput(input);
+        }
+
+        if (gameover) {
             return;
+        }
 
         movePipes();
         checkForCollisions();
     }
-
-    public ArrayList<Render> getRenders() {
-        ArrayList<Render> renders = new ArrayList<Render>();
-        renders.add(new Render(0, 0, "java/assets/background.png")); // Assuming you have a text representation for the background
-        for (Pipes pipe : pipes)
-            renders.add(pipe.getRender());
-        renders.add(new Render(0, 0, "java/assets/foreground.png")); // Assuming you have a text representation for the foreground
-        renders.add(bird.getRender());
-        return renders;
+    private void togglePause() {
+        paused = !paused;
+        pauseDelay = 10;
     }
-
     private void watchForStart() {
-        if (!started && keyboard.isKeyPressed(KeyType.Character(' '))) {
+        if (!started && keyboard.isKeyPressed(' ')) {
             started = true;
+        }
+    }
+    private void watchForReset() {
+        if (restartDelay > 0)
+            restartDelay--;
+
+        if (keyboard.isKeyPressed('R') && restartDelay <= 0) {
+            restart();
+            restartDelay = 10;
         }
     }
 
@@ -97,20 +140,19 @@ public class Game {
         if (pauseDelay > 0)
             pauseDelay--;
 
-        if (keyboard.isKeyPressed(KeyType.Character('P')) && pauseDelay <= 0) {
-            paused = !paused;
-            pauseDelay = 10;
+        if (keyboard.isKeyPressed('P') && (pauseDelay <= 0)) {
+            togglePause();
         }
     }
 
-    private void watchForReset() {
-        if (restartDelay > 0)
-            restartDelay--;
-
-        if (keyboard.isKeyPressed(KeyType.Character('R')) && restartDelay <= 0) {
-            restart();
-            restartDelay = 10;
-        }
+    public ArrayList<Render> getRenders() {
+        ArrayList<Render> renders = new ArrayList<>();
+        renders.add(new Render(0, 0, "java/assets/background.png")); // Assuming you have a text representation for the background
+        for (Pipes pipe : pipes)
+            renders.add(pipe.getRender());
+        renders.add(new Render(0, 0, "java/assets/foreground.png")); // Assuming you have a text representation for the foreground
+        renders.add(bird.getRender());
+        return renders;
     }
 
     private void movePipes() {
@@ -169,9 +211,13 @@ public class Game {
         }
 
         // Ground + Bird collision
-        if (bird.y + bird.height > Application.HEIGHT - 80) {
+        if (bird.y + bird.height > screenHeight - 80) {
             gameover = true;
-            bird.y = Application.HEIGHT - 80 - bird.height;
+            bird.y = screenHeight - 80 - bird.height;
         }
+    }
+
+    public void handleInput(KeyStroke input) {
+
     }
 }

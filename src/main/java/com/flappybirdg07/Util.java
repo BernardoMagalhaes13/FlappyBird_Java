@@ -47,8 +47,7 @@ public class Util {
 	}
 
 	private static char convertRGBToChar(int rgb) {
-		// Lógica para converter o valor RGB para um caractere
-		// Ajuste conforme necessário
+		/* Adjust the logic to map RGB values to characters */
 		return 'X';
 	}
 }

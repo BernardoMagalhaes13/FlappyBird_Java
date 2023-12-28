@@ -9,7 +9,7 @@ public class Render {
 
     public int x;
     public int y;
-    public List<char[]> image;  // Alterado de char[][] para List<char[]>
+    public List<char[]> image;
     public AffineTransform transform;
 
     public Render() {

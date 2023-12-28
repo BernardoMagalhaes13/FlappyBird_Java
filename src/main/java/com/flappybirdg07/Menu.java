@@ -1,11 +1,12 @@
 package com.flappybirdg07;
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.TerminalScreen;
 
+
 import java.io.IOException;
+import java.util.List;
 
 public class Menu implements Runnable {
 
@@ -14,7 +15,7 @@ public class Menu implements Runnable {
 
     public Menu(int width, int height, TerminalScreen screen) {
         this.screen = screen;
-        game = new Game(width, height);
+        game = new Game(width, height, screen);
         new Thread(this).start();
     }
 
@@ -23,6 +24,12 @@ public class Menu implements Runnable {
         game.onResize(newWidth, newHeight);
     }
 
+    public void init() {
+        List<char[]> charArray = Util.loadImageAsCharArray("java/assets/background.png");
+    }
+    public void init(KeyStroke input) {
+        // Lógica de inicialização com KeyStroke
+    }
     public void update() throws IOException {
         game.update();
         screen.clear();
@@ -34,9 +41,13 @@ public class Menu implements Runnable {
         // Lógica de renderização do jogo
         // ...
     }
+    public boolean isRunning() {
+        return game.started && !game.gameover; // Altere conforme necessário
+    }
 
     public void run() {
         try {
+            init(); // Chame o método init() durante a inicialização
             while (true) {
                 update();
                 Thread.sleep(25);
@@ -44,5 +55,9 @@ public class Menu implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleInput(KeyStroke input) {
+
     }
 }
