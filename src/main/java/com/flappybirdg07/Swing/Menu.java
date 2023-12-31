@@ -1,4 +1,8 @@
-package com.flappybirdg07;
+package com.flappybirdg07.Swing;
+import com.flappybirdg07.Swing.Game;
+import com.flappybirdg07.Swing.Keyboard;
+import com.flappybirdg07.Swing.Render;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

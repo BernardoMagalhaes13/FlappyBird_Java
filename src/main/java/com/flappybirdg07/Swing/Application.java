@@ -1,4 +1,5 @@
-package com.flappybirdg07;
+package com.flappybirdg07.Swing;
+
 import javax.swing.*;
 
 public class Application {

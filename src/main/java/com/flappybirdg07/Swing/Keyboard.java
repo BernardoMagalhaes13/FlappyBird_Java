@@ -1,4 +1,4 @@
-package com.flappybirdg07;
+package com.flappybirdg07.Swing;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

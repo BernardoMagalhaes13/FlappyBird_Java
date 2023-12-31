@@ -1,4 +1,5 @@
-package com.flappybirdg07;
+package com.flappybirdg07.Swing;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
