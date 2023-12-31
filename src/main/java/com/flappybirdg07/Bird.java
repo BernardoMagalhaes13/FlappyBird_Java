@@ -1,15 +1,7 @@
 package com.flappybirdg07;
-
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.input.KeyStroke;
-
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 
 public class Bird {
 
@@ -26,46 +18,58 @@ public class Bird {
     private int jumpDelay;
     private double rotation;
 
+    private Image image;
     private Keyboard keyboard;
-    private BufferedImage birdImage;
 
-    public Bird(int initialX, int initialY) {
-        x = initialX;
-        y = initialY;
+    public Bird() {
+        x = 100;
+        y = 150;
         yvel = 0;
-        width = 3; // Largura padrão
-        height = 2; // Altura padrão
+        width = 45;
+        height = 32;
         gravity = 0.5;
         jumpDelay = 0;
         rotation = 0.0;
         dead = false;
 
         keyboard = Keyboard.getInstance();
-
-        // Carregar a imagem do pássaro
-        try {
-            birdImage = ImageIO.read(new File("java/assets/bird.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void update(KeyStroke input) {
+    public void update() {
         yvel += gravity;
 
         if (jumpDelay > 0)
             jumpDelay--;
 
-        if (!dead && input != null && input.getCharacter() == ' ' && jumpDelay <= 0) {
-            yvel = -3; // Ajuste o valor conforme necessário
+        if (!dead && keyboard.isDown(KeyEvent.VK_SPACE) && jumpDelay <= 0) {
+            yvel = -10;
             jumpDelay = 10;
         }
 
-        y += (int) yvel;
+        y += (int)yvel;
     }
 
     public Render getRender() {
-        return new Render(x, y, "java/assets/bird.png");
+        Render r = new Render();
+        r.x = x;
+        r.y = y;
 
+        if (image == null) {
+            image = Util.loadImage("resources/bird.png");
+        }
+        r.image = image;
+
+        rotation = (90 * (yvel + 20) / 20) - 90;
+        rotation = rotation * Math.PI / 180;
+
+        if (rotation > Math.PI / 2)
+            rotation = Math.PI / 2;
+
+        r.transform = new AffineTransform();
+        r.transform.translate(x + width / 2, y + height / 2);
+        r.transform.rotate(rotation);
+        r.transform.translate(-width / 2, -height / 2);
+
+        return r;
     }
 }

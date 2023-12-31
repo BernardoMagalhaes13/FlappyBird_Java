@@ -1,6 +1,6 @@
 package com.flappybirdg07;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
+
+import java.awt.Image;
 
 public class Pipes {
 
@@ -11,6 +11,8 @@ public class Pipes {
     public int speed = 3;
 
     public String orientation;
+
+    private Image image;
 
     public Pipes(String orientation) {
         this.orientation = orientation;
@@ -23,7 +25,7 @@ public class Pipes {
         x = Application.WIDTH + 2;
 
         if (orientation.equals("south")) {
-            y = -(int)(Math.random() * 120) - height / 2;
+            y = -(int) (Math.random() * 120) - height / 2;
         }
     }
 
@@ -32,9 +34,11 @@ public class Pipes {
     }
 
     public boolean collides(int _x, int _y, int _width, int _height) {
+
         int margin = 2;
 
         if (_x + _width - margin > x && _x + margin < x + width) {
+
             if (orientation.equals("south") && _y < y + height) {
                 return true;
             } else if (orientation.equals("north") && _y + _height > y) {
@@ -46,8 +50,15 @@ public class Pipes {
     }
 
     public Render getRender() {
-        // Implemente a lógica para obter a representação gráfica dos canos (background, foreground, etc.)
-        // Esta é uma representação fictícia, você precisará adaptar isso para o seu código
-        return new Render(x, y, "java/assets/pipe.png");
+        Render r = new Render();
+        r.x = x;
+        r.y = y;
+
+        if (image == null) {
+            image = Util.loadImage("resources/pipe-" + orientation + ".png");
+        }
+        r.image = image;
+
+        return r;
     }
 }
