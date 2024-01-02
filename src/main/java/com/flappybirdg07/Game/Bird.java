@@ -34,7 +34,7 @@ public class Bird extends Element {
         super.setPosition(newPosition);
     }
 
-    public void setDrawingParameters() {
+    public void setDrawParameters() {
         drawObject = FlappyBird.getInstance().getDrawingFactory().getBirdDrawingElement();
         drawObject.setDrawParameters(position);
     }
