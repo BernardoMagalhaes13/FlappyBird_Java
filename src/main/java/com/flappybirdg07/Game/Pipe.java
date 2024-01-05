@@ -1,12 +1,12 @@
 package com.flappybirdg07.Game;
 
-public class Wall extends Element {
+public class Pipe extends Element {
     private int height;
     private int width;
     private int option;
     private boolean active;
 
-    public Wall(Position position, int height, int width, int option) {
+    public Pipe(Position position, int height, int width, int option) {
         super(position);
         this.height = height;
         this.width = width;
@@ -42,14 +42,21 @@ public class Wall extends Element {
         this.active = active;
     }
 
+    /**
+     * Changes some values of a pipe in order to reuse it
+     *
+     * @param position New position of the pipe
+     * @param height   New height of the pipe
+     */
     public void setPipe(Position position, int height) {
         super.setPosition(position);
         this.height = height;
     }
 
+
     @Override
-    public void setDrawingParameters() {
-        drawObject = FlappyBird.getInstance().getDrawingFactory().getPipeDrawingElement();
+    public void setDrawParameters() {
+        drawObject = FlappyBird.getInstance().getDrawFactory().getPipeDrawElement();
         drawObject.setDrawParameters(position, height, width, option);
     }
 }

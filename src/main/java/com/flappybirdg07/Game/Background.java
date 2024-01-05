@@ -19,8 +19,8 @@ public class Background extends Element {
     }
 
     @Override
-    public void setDrawingParameters() {
-        drawObject = FlappyBird.getInstance().getDrawingFactory().getBackgroundDrawingElement();
+    public void setDrawParameters() {
+        drawObject = FlappyBird.getInstance().getDrawingFactory().getBackgroundDrawElement();
         drawObject.setDrawParameters(position, width, height);
     }
 }

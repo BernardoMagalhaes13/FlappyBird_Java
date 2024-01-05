@@ -28,8 +28,8 @@ public class GameOver extends Element {
     }
 
     @Override
-    public void setDrawingParameters() {
-        drawObject = FlappyBird.getInstance().getDrawingFactory().getGameOverDrawingElement();
+    public void setDrawParameters() {
+        drawObject = FlappyBird.getInstance().getDrawingFactory().getGameOverDrawElement();
         drawObject.setDrawParameters(position, width, height);
     }
 }
