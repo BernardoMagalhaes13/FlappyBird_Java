@@ -42,12 +42,6 @@ public class Pipe extends Element {
         this.active = active;
     }
 
-    /**
-     * Changes some values of a pipe in order to reuse it
-     *
-     * @param position New position of the pipe
-     * @param height   New height of the pipe
-     */
     public void setPipe(Position position, int height) {
         super.setPosition(position);
         this.height = height;

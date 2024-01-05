@@ -13,7 +13,7 @@ public class Map {
     private static final int FIXED_UPPIPE_HEIGHT = 2;
     private static final int RANDOM_UPPIPE_HEIGHT = 12;
     private static final int PIPE_MIN_DISTANCE = 20;
-    private static final int COIN_MIN_HEIGHT = 5;
+    private static final int SEED_MIN_HEIGHT = 5;
 
     Position position = new Position(11, 10);
     Bird bird = new Bird(position);
@@ -24,7 +24,7 @@ public class Map {
     private int height;
     private List<Limit> limits;
     private List<Pipe> pipes = new ArrayList<>();
-    private List<Coin> coins = new ArrayList<>();
+    private List<Seed> seeds = new ArrayList<>();
     private boolean[][] occupiedSpace;
 
     public Map(int width, int height) {
@@ -65,8 +65,8 @@ public class Map {
         return limits.size();
     }
 
-    public int arrayCoinSize() {
-        return coins.size();
+    public int arraySeedSize() {
+        return seeds.size();
     }
 
     public Position getPosition() {
@@ -87,7 +87,7 @@ public class Map {
     public void moveMap() {
         updatePipes();
         updateLimits();
-        updateCoins();
+        updateSeeds();
     }
 
     public void updatePipes() {
@@ -95,9 +95,9 @@ public class Map {
         deactivateInvalidPipes();
     }
 
-    public void updateCoins() {
-        moveCoins();
-        deactivateInvalidCoins();
+    public void updateSeeds() {
+        moveSeeds();
+        deactivateInvalidSeeds();
     }
 
     public void updateLimits() {
@@ -129,19 +129,19 @@ public class Map {
             }
     }
 
-    public void moveCoins() {
-        for (int i = 0; i < coins.size(); i++) {
-            int newX = coins.get(i).getPosition().getX() - GAME_SPEED;
+    public void moveSeeds() {
+        for (int i = 0; i < seeds.size(); i++) {
+            int newX = seeds.get(i).getPosition().getX() - GAME_SPEED;
 
-            Position position = new Position(newX, coins.get(i).getPosition().getY());
-            coins.get(i).setPosition(position);
+            Position position = new Position(newX, seeds.get(i).getPosition().getY());
+            seeds.get(i).setPosition(position);
         }
     }
 
-    public void deactivateInvalidCoins() {
-        for (int i = 0; i < coins.size(); i++)
-            if (coins.get(i).getPosition().getX() < 0) {
-                coins.get(i).setActive(false);
+    public void deactivateInvalidSeeds() {
+        for (int i = 0; i < seeds.size(); i++)
+            if (seeds.get(i).getPosition().getX() < 0) {
+                seeds.get(i).setActive(false);
             }
     }
 
@@ -256,16 +256,16 @@ public class Map {
         pipes.add(new Pipe(p1, downPipe - 1, PIPE_WIDTH, 1)); // down
     }
 
-    public void caughtCoin() {
+    public void caughtSeed() {
         int bX = bird.getPosition().getX();
         int bY = bird.getPosition().getY() + 1;         //     p
         for (int i = bY; i < bY + 2; i++) {             // # # # #  the bird is a rectangle
             for (int j = bX - 3; j < bX + 2; j++) {     // # # # #  the bird is a rectangle
                 Position birdP = new Position(j, i);
-                for (int k = 0; k < coins.size(); k++) {
-                    if (coins.get(k).isActive()) {
-                        if (coins.get(k).getPosition().equals(birdP)) {
-                            coins.get(k).setActive(false);
+                for (int k = 0; k < seeds.size(); k++) {
+                    if (seeds.get(k).isActive()) {
+                        if (seeds.get(k).getPosition().equals(birdP)) {
+                            seeds.get(k).setActive(false);
                             score.increaseScore();
                             return;
                         }
@@ -276,22 +276,22 @@ public class Map {
         }
     }
 
-    public void computeCoins() {
+    public void computeSeeds() {
         Random random = new Random();
         int posX = random.nextInt(PIPE_MIN_DISTANCE) + width;
-        int posY = random.nextInt(height - 2 * COIN_MIN_HEIGHT) + COIN_MIN_HEIGHT;
+        int posY = random.nextInt(height - 2 * SEED_MIN_HEIGHT) + SEED_MIN_HEIGHT;
         Position p = new Position(posX, posY);
 
-        if (updateExistingCoins(p)) return;
+        if (updateExistingSeeds(p)) return;
 
-        coins.add(new Coin(p));
+        seeds.add(new Seed(p));
     }
 
-    private boolean updateExistingCoins(Position p) {
-        for (int i = 0; i < coins.size(); i++) {
-            if (!coins.get(i).isActive()) {
-                coins.get(i).setActive(true);
-                coins.get(i).setPosition(p);
+    private boolean updateExistingSeeds(Position p) {
+        for (int i = 0; i < seeds.size(); i++) {
+            if (!seeds.get(i).isActive()) {
+                seeds.get(i).setActive(true);
+                seeds.get(i).setPosition(p);
                 return true;
             }
         }
@@ -329,8 +329,8 @@ public class Map {
         pipes.add(pipe);
     }
 
-    public void addCoin(Coin coin) {
-        coins.add(coin);
+    public void addSeed(Seed seed) {
+        seeds.add(seed);
     }
 
     public void addLimit(Limit limit) {
@@ -341,8 +341,8 @@ public class Map {
         return pipes;
     }
 
-    public List<Coin> getCoins() {
-        return coins;
+    public List<Seed> getSeeds() {
+        return seeds;
     }
 
     public List<Limit> getLimits() {
@@ -362,9 +362,9 @@ public class Map {
                 pipes.get(i).draw();
             }
 
-        for (int i = 0; i < coins.size(); i++)
-            if (coins.get(i).isActive()) {
-                coins.get(i).draw();
+        for (int i = 0; i < seeds.size(); i++)
+            if (seeds.get(i).isActive()) {
+                seeds.get(i).draw();
             }
 
         //score.draw();

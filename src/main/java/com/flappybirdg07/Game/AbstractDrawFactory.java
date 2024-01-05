@@ -16,7 +16,7 @@ public interface AbstractDrawFactory {
 
     DrawElement getBackgroundDrawElement();
 
-    DrawElement getCoinDrawElement();
+    DrawElement getSeedDrawElement();
 
     void beginDraw();
 

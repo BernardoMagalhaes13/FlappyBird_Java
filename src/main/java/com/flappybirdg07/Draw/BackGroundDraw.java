@@ -1,2 +1,4 @@
-package main.java.com.flappybirdg07.Draw;public class BackGroundDraw {
+package com.flappybirdg07.Draw;
+
+public class BackGroundDraw {
 }

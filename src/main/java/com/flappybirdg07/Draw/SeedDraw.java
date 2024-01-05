@@ -1,2 +1,4 @@
-package com.flappybirdg07.Draw;public class SeedDraw {
+package com.flappybirdg07.Draw;
+
+public class SeedDraw {
 }

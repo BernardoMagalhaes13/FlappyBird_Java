@@ -1,2 +1,4 @@
-package com.flappybirdg07.Draw;public class LimitDraw {
+package com.flappybirdg07.Draw;
+
+public class LimitDraw {
 }

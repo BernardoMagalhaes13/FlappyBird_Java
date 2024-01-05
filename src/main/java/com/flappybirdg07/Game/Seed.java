@@ -1,9 +1,9 @@
 package com.flappybirdg07.Game;
 
-public class Coin extends Element {
+public class Seed extends Element {
     private boolean active;
 
-    public Coin(Position position) {
+    public Seed(Position position) {
         super(position);
         active = true;
     }
@@ -19,7 +19,7 @@ public class Coin extends Element {
 
     @Override
     public void setDrawParameters() {
-        drawObject = FlappyBird.getInstance().getDrawingFactory().getCoinDrawElement();
+        drawObject = FlappyBird.getInstance().getDrawingFactory().getSeedDrawElement();
         drawObject.setDrawParameters(position);
     }
 

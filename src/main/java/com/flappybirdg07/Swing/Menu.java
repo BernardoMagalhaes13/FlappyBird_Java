@@ -1,7 +1,4 @@
-package com.flappybirdg07.Swing;
-import com.flappybirdg07.Swing.Game;
-import com.flappybirdg07.Swing.Keyboard;
-import com.flappybirdg07.Swing.Render;
+package main.java.com.flappybirdg07.Swing;
 
 import javax.swing.*;
 import java.awt.*;

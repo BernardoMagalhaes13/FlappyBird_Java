@@ -1,2 +1,4 @@
-package com.flappybirdg07.Draw;public class PipeDraw {
+package com.flappybirdg07.Draw;
+
+public class PipeDraw {
 }

@@ -3,7 +3,6 @@ package com.flappybirdg07.Game;
 
 import com.flappybirdg07.Draw.DrawFactory;
 
-
 import java.io.IOException;
 import java.util.Random;
 
@@ -73,7 +72,7 @@ public class FlappyBird {
             if (gState == gameState.Play) {
                 moveBird = updateBird(moveBird);
                 createPipe = updatePipes(random, createPipe);
-                map.caughtCoin();
+                map.caughtSeed();
                 if (map.entersOccupiedSpace()) {
                     finishGame();
                     break;
@@ -95,7 +94,7 @@ public class FlappyBird {
 
             int rand = random.nextInt(2);
             if (rand == 0) {
-                map.computeCoins();
+                map.computeSeeds();
             }
             createPipe = System.currentTimeMillis();
             randomTime = random.nextInt(RANDOM_PIPE_DISTANCE) + FIXED_PIPE_DISTANCE;
