@@ -16,7 +16,6 @@ public class DrawFactory implements AbstractDrawFactory {
     TextGraphics tg;
     Map map;
     GameOver gameOver;
-
     DrawElement birdDE = null;
     DrawElement pipeDE = null;
     DrawElement limitDE = null;
