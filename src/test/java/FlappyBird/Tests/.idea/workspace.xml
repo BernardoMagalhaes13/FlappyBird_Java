@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="060a2411-ea2a-491b-a9c5-4cf0ed42d59b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/BackGroundTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BirdTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FlappyBirdTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameOverTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LimitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LogicTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MapTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ObjectPoolTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PipeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ScoreTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SeedTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/FlappyBirdy.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/FlappyBirdy.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/Flappybird.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/Flappybird.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/background.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/background.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/bird.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/bird.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/flappybirdy/FlappyBirdy.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/flappybirdy/FlappyBirdy.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/flappybirdy/license.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/flappybirdy/license.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/flappybirdy/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/flappybirdy/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/pipe-north.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/pipe-north.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/pipe-south.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/pipe-south.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../resources/spritesheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/resources/spritesheet.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../main/java/com/flappybirdg07/Draw/DrawFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../main/java/com/flappybirdg07/Draw/DrawFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../main/java/com/flappybirdg07/Draw/FontLoader.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2amE6iWBwy00NHXVtwhpogLkQyX" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/dario/OneDrive - Maieutica/Desktop/refactoring_bmcl/refactoring_bmcl",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="060a2411-ea2a-491b-a9c5-4cf0ed42d59b" name="Changes" comment="" />
+      <created>1704915181251</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1704915181251</updated>
+      <workItem from="1704915182315" duration="23000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
