@@ -5,9 +5,27 @@ Desde o planeamento até a fase de implementação, estaremos empenhados em cria
 
 ### IMPLEMENTED FEATURES
 
-COLOCAR AQUI AS FUNCIONALIDADES ABAIXO À MEDIDA QUE AS VAMOS IMPLEMENTANDO
+1. Menu Inicial
+Implementação do Menu: Desenvolvemos um menu inicial intuitivo onde permite iniciar o jogo quando o jogador pretender.
+(print)
 
-(incluir prints)
+2. Controlo do Pássaro
+Controlo por Cliques no Rato: Implementamos um sistema de controlo do pássaro através de cliques no rato, proporcionando aos jogadores a capacidade de controlar a altitude do pássaro para evitar colisões com obstáculos.
+
+3. Gerar Obstáculos
+Sistema de Geração Aleatória: Criamos um sistema dinâmico para gerar obstáculos aleatórios ao longo do percurso do pássaro.
+(print)
+
+4. Sistema de Pontuação
+Mecanismo de Pontuação: Implementamos um sistema de pontuação que regista a pontuação do jogador à medida que avança no jogo. No final do jogo, é exibido a pontuação final e o recorde atual de pontuação
+(print)
+
+6. Gráficos Simples
+Representação Gráfica do Cenário com Lanterna: Utilizamos uma biblioteca text-based chamada Lanterna para criar elementos gráficos básicos que representam o cenário do jogo.
+(print)
+
+7. Sistema de Recompensa com Sementes
+Recompensas por Apanhar Sementes: Adicionamos uma funcionalidade extra onde o jogador pode ganhar pontos adicionais ao apanhar sementes durante o jogo.
 
 ### PLANNED FEATURES
 
