@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotEquals;
 
 public class ScoreTest {
     @Test
-    public void Logicscore() {
+    public void LogicScore() {
         Position position = new Position(10, 10);
         Score score = new Score(position);
 
@@ -25,7 +25,7 @@ public class ScoreTest {
     }
 
     @Test
-    public void Constructorscore() {
+    public void ConstructorScore() {
         Position position = new Position(10, 10);
         Score score = new Score(position);
 

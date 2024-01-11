@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class PipeTest {
 
     @Test
-    public void Constructorpipe() {
+    public void ConstructorPipe() {
         Position position = new Position(0, 0);
         Pipe pipe = new Pipe(position, 0, 0, 0);
 

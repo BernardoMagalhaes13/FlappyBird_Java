@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class SeedTest {
 
     @Test
-    public void Constructorseed() {
+    public void ConstructorSeed() {
         Position position = new Position(0, 0);
 
         Seed seed = new Seed(position);
