@@ -15,25 +15,29 @@ public class GameOverDraw implements DrawElement {
     int height;
     int width;
     Score score;
+
     public GameOverDraw(TextGraphics g, Score score) {
         graphics = g;
         this.score = score;
     }
+
     @Override
     public void draw() {
-
         graphics.setBackgroundColor(TextColor.Factory.fromString("#74c3d7"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF10"));
         graphics.enableModifiers(SGR.BOLD);
 
         String[] gameOverText = {
-             "GAME OVER"
+                "GAME OVER"
         };
 
-        int startY = position.getY();
+        int centerX = position.getX() + (width - gameOverText[0].length()) / 2;
+
+        int startY = position.getY() + (height - gameOverText.length) / 2 - Score.HEIGHT;
+
         for (int i = 0; i < gameOverText.length; i++) {
-            graphics.putString(new TerminalPosition(position.getX(), startY + i), gameOverText[i]);
+            graphics.putString(new TerminalPosition(centerX, startY + i), gameOverText[i]);
         }
     }
 

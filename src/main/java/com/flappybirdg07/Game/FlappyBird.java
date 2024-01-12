@@ -44,7 +44,7 @@ public class FlappyBird {
         return adf;
     }
 
-    private void finishGame() {
+    private void finishGame() throws IOException {
         adf.beginDraw();
         adf.draw();
         gState = gameState.GameOver;

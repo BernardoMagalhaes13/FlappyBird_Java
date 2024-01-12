@@ -12,6 +12,17 @@ import static org.mockito.Mockito.*;
 public class BackGroundTest {
 
     private Background background;
+    @Test
+    public void ConstructorBackground() {
+        Position position = new Position(0, 0);
+        int width = 80;
+        int heigth = 24;
+        Background background = new Background(position, width, heigth);
+
+        assertEquals(position, background.getPosition());
+        assertEquals(width, background.getWidth());
+        assertEquals(heigth, background.getHeight());
+    }
 
     @Before
     public void setUp() {

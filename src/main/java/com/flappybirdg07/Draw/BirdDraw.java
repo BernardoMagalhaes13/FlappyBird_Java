@@ -24,7 +24,7 @@ public class BirdDraw implements DrawElement {
         graphics.setForegroundColor(TextColor.Factory.fromString("#fcff00"));
         graphics.enableModifiers(SGR.BOLD);
 
-        String text = "123456789";
+        String text = "0";
         int x = position.getX() - 2;
         int y = position.getY();
 

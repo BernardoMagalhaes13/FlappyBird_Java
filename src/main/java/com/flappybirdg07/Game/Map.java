@@ -229,9 +229,9 @@ public class Map {
         for (int i = 0; i < pipes.size(); i++) {
             if (!pipes.get(i).isActive()) {
                 pipes.get(i).setPipe(p, upPipe);
-                pipes.get(i).setActive(true); // top limit
+                pipes.get(i).setActive(true);
                 pipes.get(i + 1).setPipe(p1, downPipe - 1);
-                pipes.get(i + 1).setActive(true); // bot limit
+                pipes.get(i + 1).setActive(true);
                 return true;
             }
         }
@@ -357,5 +357,13 @@ public class Map {
         //score.draw();
         bird.draw();
     }
+    public void reset() {
+        pipes.clear();
+        seeds.clear();
+        score.reset();
+        bird.reset();
+        background.draw();
+    }
+
 }
 

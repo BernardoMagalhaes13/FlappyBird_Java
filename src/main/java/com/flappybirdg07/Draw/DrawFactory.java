@@ -31,7 +31,7 @@ public class DrawFactory implements AbstractDrawFactory {
     private Screen screen;
 
     private Score score;
-
+    private boolean gameOverState = false;
     public DrawFactory(Map m, GameOver go) {
         map = m;
         gameOver = go;
@@ -124,6 +124,16 @@ public class DrawFactory implements AbstractDrawFactory {
             map.getScore().draw();
         }
     }
+    public void restartGame() {
+        map.reset();
+    }
+    @Override
+    public void setKeyPressed(boolean keyPressed) {
+        if (keyPressed) {
+            // Adicione aqui a lógica para encerrar o aplicativo
+            System.exit(0);  // Isso encerrará o programa
+        }
+    }
 
     private void drawStartScreen() {
         tg.setBackgroundColor(TextColor.Factory.fromString("#74c3d7"));
@@ -132,17 +142,30 @@ public class DrawFactory implements AbstractDrawFactory {
         tg.setForegroundColor(TextColor.Factory.fromString("#FFFF10"));
         tg.enableModifiers(SGR.BOLD);
         tg.putString(new TerminalPosition(map.getWidth() / 2 - 10, map.getHeight() / 2 - 5), "Press Play to Fly");
-        drawButton("Start (Enter)", new Position(map.getWidth() / 2 - 5, map.getHeight() / 2 - 3));
+        drawButton("Start (SPACE)", new Position(map.getWidth() / 2 - 5, map.getHeight() / 2 - 3));
     }
 
     @Override
-    public void drawGameOver() {
+    public void drawGameOver() throws IOException {
         gameOver.draw();
         map.getScore().setPosition(new Position(map.getWidth() / 2 - 6, map.getHeight() - 8));
         map.getScore().draw();
+
+        KeyStroke key = screen.pollInput();
+
+        if (key != null) {
+            if (processKey(key)) {
+                restartGame();
+            } else if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'Q') {
+                // Adicione lógica para sair do jogo, se necessário
+                System.exit(0);
+            }
+        }
+
         drawButton("Restart (R)", new Position(map.getWidth() / 2 - 8, map.getHeight() - 6));
         drawButton("Quit (Q)", new Position(map.getWidth() / 2 - 5, map.getHeight() - 4));
     }
+
 
     private void drawButton(String label, Position position) {
         tg.setForegroundColor(TextColor.ANSI.BLACK);
@@ -152,8 +175,11 @@ public class DrawFactory implements AbstractDrawFactory {
 
     public boolean processKey(KeyStroke key) {
         switch (key.getKeyType()) {
-            case Enter:
-                return true;
+            case Character:
+                if (key.getCharacter() == ' ') {
+                    return true;
+                }
+                break;
             default:
                 break;
         }
@@ -162,18 +188,20 @@ public class DrawFactory implements AbstractDrawFactory {
 
     @Override
     public boolean isKeyPressed() throws IOException {
-        KeyStroke key;
-        key = screen.pollInput();
+        KeyStroke key = screen.pollInput();
 
-        if (key != null && (key.getKeyType() == KeyType.Backspace || key.getKeyType() == KeyType.EOF)) {
-            return true;
-        } else if (key != null) {
-            return processKey(key);
+        if (key != null) {
+            if (key.getKeyType() == KeyType.Character) {
+                char character = key.getCharacter();
+                if (character == ' ' || character == 'R' || character == 'Q') {
+                    return true;
+                } else {
+                }
+            }
         }
+
         return false;
     }
 
-    @Override
-    public void setKeyPressed(boolean keyPressed) {
-    }
+
 }
