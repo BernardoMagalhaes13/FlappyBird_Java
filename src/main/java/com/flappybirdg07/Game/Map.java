@@ -169,14 +169,18 @@ public class Map {
 
     private boolean setBirdOccupation() {
         int bX = bird.getPosition().getX();
-        int bY = bird.getPosition().getY() + 1;
+        int bY = bird.getPosition().getY();  // Não incrementar aqui
 
-        for (int i = bY; i < bY + 2; i++)           //     p
-            for (int j = bX - 3; j < bX + 2; j++)   // # # # #  the bird is a rectangle
-                if (!occupiedSpace[i][j]) {         // # # # #  and 'p' as its position
-                    occupiedSpace[i][j] = true;
+        for (int i = bY; i < bY + 2; i++)
+            for (int j = bX - 3; j < bX + 2; j++)
+                if (i >= 0 && i < occupiedSpace.length && j >= 0 && j < occupiedSpace[0].length) {
+                    if (!occupiedSpace[i][j]) {
+                        occupiedSpace[i][j] = true;
+                    } else {
+                        return true;
+                    }
                 } else {
-                    return true;
+                    return true;  // Adicione uma verificação para evitar índices fora dos limites
                 }
         return false;
     }

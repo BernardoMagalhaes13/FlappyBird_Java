@@ -18,7 +18,7 @@ public class GameOverDraw implements DrawElement {
 
     public GameOverDraw(TextGraphics g, Score score) {
         graphics = g;
-        this.score = score;
+        this.score = this.score;
     }
 
     @Override

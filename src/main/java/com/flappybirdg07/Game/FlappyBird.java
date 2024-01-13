@@ -137,6 +137,34 @@ public class FlappyBird {
         return gState;
     }
 
+    public void endGame() throws IOException {
+        adf.beginDraw();
+        adf.draw();
+        gState = gameState.GameOver;
+        adf.drawGameOver();
+        adf.endDraw();
+
+        try {
+            Thread.sleep(GAME_OVER_WAITING_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.exit(0);
+    }
+
+    public void restartGame() throws IOException {
+        gState = gameState.Start;
+
+        map.reset();
+
+        // Iniciar o desenho do jogo
+        adf.beginDraw();
+        adf.drawStartScreen();
+        adf.endDraw();
+    }
+
+
     public enum gameState {
         Start,
         Play,

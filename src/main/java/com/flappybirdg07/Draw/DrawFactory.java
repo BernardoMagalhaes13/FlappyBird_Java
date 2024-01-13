@@ -12,15 +12,8 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.flappybirdg07.Game.*;
-import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
-
-
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-
 
 public class DrawFactory implements AbstractDrawFactory {
 
@@ -38,48 +31,13 @@ public class DrawFactory implements AbstractDrawFactory {
     private Screen screen;
 
     private Score score;
-    private Font font;
-    int width;
-     int height;
 
-    private boolean gameOverState = false;
-    public Font getFont() {
-        return font;
-    }
-
-    public void setFont(Font font) {
-        this.font = font;
-    }
-
-
-    public Font changeFont(String path, int size){
-        File fontFile = new File(path);
-        Font font;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT,fontFile);
-        } catch (FontFormatException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        ge.registerFont(font);
-        Font loaded = font.deriveFont(Font.PLAIN,size);
-        return loaded;
-    }
     public DrawFactory(Map m, GameOver go) {
         map = m;
         gameOver = go;
+        Terminal terminal = null;
         try {
-        setFont(changeFont("resources\\cascadia-code\\Cascadia.ttf", 20));
-        AWTTerminalFontConfiguration cfg = new SwingTerminalFontConfiguration(true,
-                AWTTerminalFontConfiguration.BoldMode.NOTHING, getFont());
-        Terminal terminal = new DefaultTerminalFactory()
-                .setForceAWTOverSwing(true)
-                .setInitialTerminalSize(new TerminalSize(width, height))
-                .setTerminalEmulatorFontConfiguration(cfg)
-                .createTerminal();
-
+            terminal = new DefaultTerminalFactory().createTerminal();
             screen = new TerminalScreen(terminal);
             screen.setCursorPosition(null);
             screen.startScreen();
@@ -90,7 +48,7 @@ public class DrawFactory implements AbstractDrawFactory {
         }
     }
 
-    public void initializeScore(Score score) {
+    public void Scoreinitialize(Score score) {
         this.score = score;
     }
 
@@ -166,18 +124,8 @@ public class DrawFactory implements AbstractDrawFactory {
             map.getScore().draw();
         }
     }
-    public void restartGame() {
-        map.reset();
-    }
-    @Override
-    public void setKeyPressed(boolean keyPressed) {
-        if (keyPressed) {
-            // Adicione aqui a lógica para encerrar o aplicativo
-            System.exit(0);  // Isso encerrará o programa
-        }
-    }
 
-    private void drawStartScreen() {
+    public void drawStartScreen() {
         tg.setBackgroundColor(TextColor.Factory.fromString("#74c3d7"));
         tg.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(map.getWidth(), map.getHeight()), ' ');
 
@@ -193,14 +141,25 @@ public class DrawFactory implements AbstractDrawFactory {
         map.getScore().setPosition(new Position(map.getWidth() / 2 - 6, map.getHeight() - 8));
         map.getScore().draw();
 
-        KeyStroke key = screen.pollInput();
+        // Verifica se a tecla correspondente foi pressionada
+        if (isKeyPressed()) {
+            KeyStroke key = screen.pollInput();  // Apenas chama uma vez para evitar perda de eventos
 
-        if (key != null) {
-            if (processKey(key)) {
-                restartGame();
-            } else if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'Q') {
-                // Adicione lógica para sair do jogo, se necessário
-                System.exit(0);
+            try {
+                System.out.println("GameState: " + FlappyBird.getInstance().getGameState());
+                System.out.println("Tecla pressionada: " + key.getCharacter()); // Adicione esta linha para depurar
+
+                if (FlappyBird.getInstance().getGameState() == FlappyBird.gameState.GameOver) {
+                    if (key.getCharacter() == 'R' || key.getCharacter() == 'r') {
+                        System.out.println("Reiniciar jogo"); // Adicione esta linha para depurar
+                        FlappyBird.getInstance().restartGame();
+                    } else if (key.getCharacter() == 'Q' || key.getCharacter() == 'q') {
+                        System.out.println("Encerrar jogo"); // Adicione esta linha para depurar
+                        FlappyBird.getInstance().endGame();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -208,6 +167,15 @@ public class DrawFactory implements AbstractDrawFactory {
         drawButton("Quit (Q)", new Position(map.getWidth() / 2 - 5, map.getHeight() - 4));
     }
 
+
+
+
+    @Override
+    public void endGame() {
+        System.out.println("Jogo Fechado. Obrigado por jogar espero que tenha gostado e se divertido!");
+
+        System.exit(0);
+    }
 
     private void drawButton(String label, Position position) {
         tg.setForegroundColor(TextColor.ANSI.BLACK);
@@ -232,18 +200,13 @@ public class DrawFactory implements AbstractDrawFactory {
     public boolean isKeyPressed() throws IOException {
         KeyStroke key = screen.pollInput();
 
-        if (key != null) {
-            if (key.getKeyType() == KeyType.Character) {
-                char character = key.getCharacter();
-                if (character == ' ' || character == 'R' || character == 'Q') {
-                    return true;
-                } else {
-                }
-            }
+        if (key != null && (key.getKeyType() == KeyType.Character)) {
+            return processKey(key);
         }
-
         return false;
     }
 
-
+    @Override
+    public void setKeyPressed(boolean keyPressed) {
+    }
 }

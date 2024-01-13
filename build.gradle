@@ -5,7 +5,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
-group = 'org.example'
+group = 'TBG07'
 version = '1.0-SNAPSHOT'
 project.ext.lwjglVersion = "3.3.3"
 project.ext.lwjglNatives = "natives-windows"
@@ -111,13 +111,10 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
-
 }
 application {
-    mainClassName = 'com.flappybirdg07.Menu'
+    mainClassName = 'Application'
 }
 
-test {
-    useJUnitPlatform()
-}
+
 
