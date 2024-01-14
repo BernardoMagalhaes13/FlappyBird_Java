@@ -53,7 +53,7 @@ Desenvolvemos um menu de final de jogo, intuitivo onde permite ao utilizador rei
   ![image](https://github.com/DarioRodrigues17/tbg07/blob/main/docs/img/UML.png?raw=true)
 
   ## UML (Final)
-  [UML_Final.java](https://github.com/DarioRodrigues17/tbg07/blob/main/docs/img/UML_Final.png)
+  [UML_Final.png](https://github.com/DarioRodrigues17/tbg07/blob/main/docs/img/UML_Final.png)
 
 
 ### DESIGN
