@@ -67,7 +67,7 @@ Desenvolvemos um menu de final de jogo, intuitivo onde permite ao utilizador rei
   
 - **Implementation**
   - O Padrão Singleton é implementado na classe FlappyBird com um construtor privado (FlappyBird()) e um método estático para aceder à instância singleton (getInstance()). A instância única é armazenada numa variável estática (instance):
-      
+       
           public class FlappyBird {
           private static FlappyBird instance = null;
 
