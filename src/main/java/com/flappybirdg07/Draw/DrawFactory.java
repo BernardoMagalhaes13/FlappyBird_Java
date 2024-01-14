@@ -135,42 +135,40 @@ public class DrawFactory implements AbstractDrawFactory {
         drawButton("Start (SPACE)", new Position(map.getWidth() / 2 - 5, map.getHeight() / 2 - 3));
     }
 
-    @Override
     public void drawGameOver() throws IOException {
+
         gameOver.draw();
         map.getScore().setPosition(new Position(map.getWidth() / 2 - 6, map.getHeight() - 8));
         map.getScore().draw();
 
-        // Verifica se a tecla correspondente foi pressionada
+        // Check if a key is pressed
         if (isKeyPressed()) {
-            KeyStroke key = screen.pollInput();  // Apenas chama uma vez para evitar perda de eventos
+            KeyStroke key = screen.pollInput(); // Only call once to avoid event loss
 
-            try {
-                System.out.println("GameState: " + FlappyBird.getInstance().getGameState());
-                System.out.println("Tecla pressionada: " + key.getCharacter()); // Adicione esta linha para depurar
+            switch (key.getCharacter()) {
+                case 'R':
+                case 'r':
+                    System.out.println("Reiniciar jogo"); // Add this line for debugging
+                    FlappyBird.getInstance().restartGame();
+                    break;
 
-                if (FlappyBird.getInstance().getGameState() == FlappyBird.gameState.GameOver) {
-                    if (key.getCharacter() == 'R' || key.getCharacter() == 'r') {
-                        System.out.println("Reiniciar jogo"); // Adicione esta linha para depurar
-                        FlappyBird.getInstance().restartGame();
-                    } else if (key.getCharacter() == 'Q' || key.getCharacter() == 'q') {
-                        System.out.println("Encerrar jogo"); // Adicione esta linha para depurar
-                        FlappyBird.getInstance().endGame();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                case 'Q':
+                case 'q':
+                    System.out.println("Encerrar jogo"); // Add this line for debugging
+                    FlappyBird.getInstance().endGame();
+                    break;
             }
         }
 
+        // Draw the buttons
         drawButton("Restart (R)", new Position(map.getWidth() / 2 - 8, map.getHeight() - 6));
         drawButton("Quit (Q)", new Position(map.getWidth() / 2 - 5, map.getHeight() - 4));
     }
+    public void restartGame() throws IOException {
+        System.out.println("Reiniciar jogo"); // Add this line for debugging
+        FlappyBird.getInstance().restartGame();
+    }
 
-
-
-
-    @Override
     public void endGame() {
         System.out.println("Jogo Fechado. Obrigado por jogar espero que tenha gostado e se divertido!");
 

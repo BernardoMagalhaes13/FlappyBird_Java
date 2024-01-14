@@ -26,8 +26,6 @@ public interface AbstractDrawFactory {
 
     void drawGameOver() throws IOException;
 
-    void endGame();
-
     boolean isKeyPressed() throws IOException;
 
     void setKeyPressed(boolean keyPressed);

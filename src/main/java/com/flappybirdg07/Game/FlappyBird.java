@@ -58,7 +58,9 @@ public class FlappyBird {
         }
 
     }
-
+    public void drawGameOver() throws IOException {
+        this.adf.drawGameOver();
+    }
     public void run() throws IOException {
         Random random = new Random();
 
@@ -153,12 +155,11 @@ public class FlappyBird {
         System.exit(0);
     }
 
-    public void restartGame() throws IOException {
+    public void restartGame() {
         gState = gameState.Start;
 
         map.reset();
 
-        // Iniciar o desenho do jogo
         adf.beginDraw();
         adf.drawStartScreen();
         adf.endDraw();
